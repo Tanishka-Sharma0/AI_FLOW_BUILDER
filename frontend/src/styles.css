@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-baby-blue: #89CFF0;
+  --color-soft-purple: #B19CD9;
+}
+
+body {
+  background: linear-gradient(135deg, #89CFF0 0%, #ffffff 50%, #B19CD9 100%);
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.journal-card {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #89CFF0, #B19CD9);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.input-field {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid rgba(137, 207, 240, 0.3);
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.input-field:focus {
+  border-color: #B19CD9;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.2);
+}
+
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-baby-blue/20 via-white to-soft-purple/20 min-h-screen;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .journal-card {
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/50;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-baby-blue to-soft-purple text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-soft-purple border-2 border-soft-purple font-semibold py-2 px-4 rounded-xl hover:bg-soft-purple/10 transition-all duration-200;
+  }
+
+  .input-field {
+    @apply w-full p-4 border-2 border-baby-blue/30 rounded-xl focus:border-soft-purple focus:ring-2 focus:ring-soft-purple/20 outline-none transition-all duration-200 bg-white/50;
+  }
+}
