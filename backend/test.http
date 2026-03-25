@@ -1,0 +1,349 @@
+### MERN AI Flow Backend - API Testing
+### Use with REST Client extension in VS Code or any HTTP client
+
+### Base URL - Change this based on your environment
+@baseUrl = http://localhost:8000
+@apiUrl = {{baseUrl}}/api/ai
+
+### ============================================
+### 1. HEALTH CHECK
+### ============================================
+
+### Test server health
+GET {{baseUrl}}/
+Content-Type: application/json
+
+### Expected Response:
+# {
+#   "status": "OK",
+#   "timestamp": "2024-01-01T00:00:00.000Z"
+# }
+
+### ============================================
+### 2. AI GENERATION TESTS
+### ============================================
+
+### Test 1: Generate AI response with basic prompt
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "What is the capital of France?"
+}
+
+### Test 2: Generate AI response with longer prompt
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "Explain quantum computing in simple terms for a 10-year-old."
+}
+
+### Test 3: Generate AI response with custom model (Mistral)
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "Write a short poem about programming in JavaScript",
+  "model": "openrouter/auto"
+}
+
+### Test 4: Generate AI response with Gemini model (default)
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "What are the top 3 programming languages for beginners and why?",
+  "model": "openrouter/auto"
+}
+
+### Test 5: Generate AI response with creative task
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "Create a fun 5-question quiz about space exploration with answers."
+}
+
+### Test 6: Test error case - empty prompt
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": ""
+}
+
+### Test 7: Test error case - missing prompt
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{}
+
+### ============================================
+### 3. SAVE CONVERSATION TESTS
+### ============================================
+
+### Test 1: Save a complete conversation
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "What is the capital of France?",
+  "response": "The capital of France is Paris.",
+  "modelUsed": "openrouter/auto"
+}
+
+### Test 2: Save another conversation
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "What is 2+2?",
+  "response": "2 + 2 equals 4.",
+  "modelUsed": "openrouter/auto",
+  "metadata": {
+    "topic": "math",
+    "difficulty": "easy"
+  }
+}
+
+### Test 3: Save conversation about programming
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "What is React?",
+  "response": "React is a JavaScript library for building user interfaces, developed by Facebook.",
+  "modelUsed": "mistralai/mistral-7b-instruct:free"
+}
+
+### Test 4: Save creative conversation
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "Write a joke about programming",
+  "response": "Why do programmers prefer dark mode? Because light attracts bugs!",
+  "modelUsed": "google/gemini-2.0-flash-lite-preview-02-05:free"
+}
+
+### Test 5: Save conversation with metadata
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "What's the weather like today?",
+  "response": "I don't have access to real-time weather data, but you can check a weather service!",
+  "modelUsed": "google/gemini-2.0-flash-lite-preview-02-05:free",
+  "metadata": {
+    "timestamp": "2024-01-01T12:00:00Z",
+    "user": "test-user-1",
+    "category": "weather"
+  }
+}
+
+### Test 6: Save error case - missing prompt
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "response": "This is a response without a prompt"
+}
+
+### Test 7: Save error case - missing response
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "This is a prompt without response"
+}
+
+### ============================================
+### 4. GET CONVERSATIONS TESTS
+### ============================================
+
+### Test 1: Get all conversations (should return latest 50)
+GET {{apiUrl}}/conversations
+Content-Type: application/json
+
+### Test 2: Get conversations with limit (using query params if supported)
+GET {{apiUrl}}/conversations?limit=10
+Content-Type: application/json
+
+### ============================================
+### 5. GET SINGLE CONVERSATION TESTS
+### ============================================
+
+### First, get all conversations to find an ID
+GET {{apiUrl}}/conversations
+
+### Then use the ID from above response to test single conversation
+# @prompt conversationId REPLACE_WITH_ACTUAL_ID_FROM_ABOVE
+
+### Test 1: Get conversation by ID (replace with actual ID)
+GET {{apiUrl}}/conversations/65f5a1b2c3d4e5f6a7b8c9d0
+Content-Type: application/json
+
+### Test 2: Get conversation with invalid ID
+GET {{apiUrl}}/conversations/invalid-id-123
+Content-Type: application/json
+
+### ============================================
+### 6. COMPLETE WORKFLOW TESTS
+### ============================================
+
+### Workflow 1: Generate, then Save
+### Step 1: Generate AI response
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "What are the benefits of meditation?"
+}
+
+### Step 2: Save the generated response (copy response from above)
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "What are the benefits of meditation?",
+  "response": "Meditation offers numerous benefits including reduced stress, improved focus, better emotional health, and enhanced self-awareness.",
+  "modelUsed": "google/gemini-2.0-flash-lite-preview-02-05:free"
+}
+
+### Workflow 2: Full flow with metadata
+### Step 1: Generate creative response
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "Create a short story about a robot learning to paint"
+}
+
+### Step 2: Save with metadata
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "Create a short story about a robot learning to paint",
+  "response": "Once upon a time, a robot named Artie discovered colors...",
+  "modelUsed": "google/gemini-2.0-flash-lite-preview-02-05:free",
+  "metadata": {
+    "genre": "sci-fi",
+    "theme": "creativity",
+    "wordCount": 150
+  }
+}
+
+### ============================================
+### 7. BULK OPERATIONS TEST
+### ============================================
+
+### Create multiple conversations quickly
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "What is machine learning?",
+  "response": "Machine learning is a subset of AI that enables systems to learn from data.",
+  "modelUsed": "google/gemini-2.0-flash-lite-preview-02-05:free"
+}
+
+###
+
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "What is TypeScript?",
+  "response": "TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.",
+  "modelUsed": "google/gemini-2.0-flash-lite-preview-02-05:free"
+}
+
+###
+
+POST {{apiUrl}}/save
+Content-Type: application/json
+
+{
+  "prompt": "What is MongoDB?",
+  "response": "MongoDB is a NoSQL document database that stores data in flexible JSON-like documents.",
+  "modelUsed": "google/gemini-2.0-flash-lite-preview-02-05:free"
+}
+
+### ============================================
+### 8. ERROR HANDLING TESTS
+### ============================================
+
+### Test 1: Invalid route
+GET {{baseUrl}}/api/invalid-route
+Content-Type: application/json
+
+### Test 2: Wrong HTTP method
+POST {{apiUrl}}/conversations
+Content-Type: application/json
+
+{
+  "test": "This should fail"
+}
+
+### Test 3: Malformed JSON
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "This has malformed JSON
+
+### Test 4: Too large payload (if you want to test)
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "A".repeat(10000)
+}
+
+### ============================================
+### 9. PERFORMANCE TESTS
+### ============================================
+
+### Test concurrent requests (run multiple times quickly)
+### Request 1
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "What is Node.js?"
+}
+
+### Request 2 (run immediately after)
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "What is Express.js?"
+}
+
+### Request 3
+POST {{apiUrl}}/generate
+Content-Type: application/json
+
+{
+  "prompt": "What is React?"
+}
+
+### ============================================
+### 10. ENVIRONMENT VARIABLES TEST
+### ============================================
+
+### Check if MongoDB is connected (should return conversations)
+GET {{apiUrl}}/conversations
+Content-Type: application/json
+
+### This will show if database connection is working
+# - If returns empty array: Database is connected but no data
+# - If returns error: Database connection issue
+# - If returns conversations: Everything working
+
+### ============================================
+### END OF TEST FILE
+### ============================================

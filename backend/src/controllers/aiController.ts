@@ -7,7 +7,7 @@ import { AIRequest, AIResponse } from "../types"
 export class AIController {
     static async generateResponse(req: Request, res: Response): Promise<void> {
         try {
-            const { prompt, model = 'google/gemini-2.0-flash-lite-preview-02-05:free' } = req.body as AIRequest;
+            const { prompt, model = 'openrouter/auto' } = req.body as AIRequest;
             if (!prompt) {
                 res.status(400).json({
                     success: false,

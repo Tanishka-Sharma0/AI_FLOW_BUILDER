@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.post("/generate", AIController.generateResponse);
 router.post("/save", AIController.saveConversation);
-router.post("/conversations", AIController.getConversations);
-router.post("'/conversations/:id", AIController.getConversation);
+router.get("/conversations", AIController.getConversations);
+router.get("'/conversations/:id", AIController.getConversation);
 
 
 
