@@ -10,17 +10,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-const allowedOrigins = process.env.FRONTEND_URL?.split(",") || [];
 app.use(
     cors({
-        origin: function (origin, callback) {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("CORS not allowed"));
-            }
-        },
-        credentials: true,
+        origin: "*",
+        credentials: true
     })
 );
 
