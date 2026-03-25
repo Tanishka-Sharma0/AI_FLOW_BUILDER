@@ -11,6 +11,8 @@ Features
 -  TypeScript for type safety
 - Modern UI with Tailwind CSS
 - Real-time updates with React hooks(effect and state , memoization used  with usecallbacks to avoid expenive calculation and delay of response)
+- Zoom In Zoom out of Screen with buttons with full screen mode avaiable using React flow.
+-  movement of nodes and edges w using handler.
 
   Tech Stack
 
